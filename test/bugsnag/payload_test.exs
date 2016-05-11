@@ -87,7 +87,12 @@ defmodule Bugsnag.PayloadTest do
   end
 
   test "it reports the release stage" do
+    # defaults to current Mix.env
     assert "test"    == get_event.app.releaseStage
+
+    Application.put_env(:bugsnag, :release_stage, "foo")
+    assert "foo" == get_event.app.releaseStage
+
     assert "staging" == get_event(release_stage: "staging").app.releaseStage
     assert "qa"      == get_event(release_stage: "qa").app.releaseStage
     assert ""        == get_event(release_stage: "").app.releaseStage
