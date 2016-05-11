@@ -23,6 +23,7 @@ defmodule Bugsnag.Payload do
 
   defp add_event(payload, exception, stacktrace, options) do
     error = Exception.normalize(:error, exception)
+    release_stage = Map.get(options, :release_stage, Application.get_env(:bugsnag, :release_stage))
 
     event =
       Map.new
@@ -32,7 +33,7 @@ defmodule Bugsnag.Payload do
       |> add_context(options[:context])
       |> add_user(options[:user])
       |> add_metadata(options[:metadata])
-      |> add_release_stage(Map.get(options, :release_stage, to_string(Mix.env)))
+      |> add_release_stage(release_stage)
 
     Map.put payload, :events, [event]
   end

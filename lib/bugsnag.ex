@@ -15,8 +15,7 @@ defmodule Bugsnag do
       :error_logger.add_report_handler(Bugsnag.Logger)
     end
 
-    # put normalized api key to application config
-    Application.put_env(:bugsnag, :api_key, config[:api_key])
+    update_app_config(config)
   end
 
   def report(exception, options \\ []) do
@@ -40,7 +39,14 @@ defmodule Bugsnag do
   defp default_config do
     [
       api_key: System.get_env("BUGSNAG_API_KEY") || "FAKEKEY",
-      use_logger: true
+      use_logger: true,
+      release_stage: to_string(Mix.env) || "dev"
     ]
+  end
+
+  defp update_app_config(normalized_config) do
+    Enum.each normalized_config, fn {key, value} ->
+      Application.put_env :bugsnag, key, value
+    end
   end
 end
