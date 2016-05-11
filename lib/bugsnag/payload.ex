@@ -17,6 +17,10 @@ defmodule Bugsnag.Payload do
     Map.put payload, :apiKey, Application.get_env(:bugsnag, :api_key)
   end
 
+  defp add_event(payload, exception, stacktrace, options) when is_list(options) do
+    add_event payload, exception, stacktrace, Enum.into(options, %{})
+  end
+
   defp add_event(payload, exception, stacktrace, options) do
     error = Exception.normalize(:error, exception)
 
@@ -24,11 +28,11 @@ defmodule Bugsnag.Payload do
       Map.new
       |> add_payload_version
       |> add_exception(error, stacktrace)
-      |> add_severity(Keyword.get(options, :severity))
-      |> add_context(Keyword.get(options, :context))
-      |> add_user(Keyword.get(options, :user))
-      |> add_metadata(Keyword.get(options, :metadata))
-      |> add_release_stage(Keyword.get(options, :release_stage, to_string Mix.env))
+      |> add_severity(options[:severity])
+      |> add_context(options[:context])
+      |> add_user(options[:user])
+      |> add_metadata(options[:metadata])
+      |> add_release_stage(Map.get(options, :release_stage, to_string(Mix.env)))
 
     Map.put payload, :events, [event]
   end
