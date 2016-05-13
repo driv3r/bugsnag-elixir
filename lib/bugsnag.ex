@@ -2,6 +2,7 @@ defmodule Bugsnag do
   use Application
 
   alias Bugsnag.Payload
+  require Logger
 
   @notify_url "https://notify.bugsnag.com"
   @request_headers [{"Content-Type", "application/json"}]
@@ -33,6 +34,7 @@ defmodule Bugsnag do
   end
 
   defp send_notification(body) do
+    Logger.warn body
     HTTPoison.post @notify_url, body, @request_headers
   end
 

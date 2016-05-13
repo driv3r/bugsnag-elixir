@@ -18,6 +18,7 @@ defmodule Bugsnag.Logger do
   def handle_event({:error_report, _gl, {_pid, _type, [message | _]}}, state)
   when is_list(message) do
     try do
+      Logger.warn "handle error report"
       error_info = message[:error_info]
 
       case error_info do
