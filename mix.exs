@@ -26,7 +26,7 @@ defmodule Bugsnag.Mixfile do
 
   defp deps do
     [{:httpoison, "~> 0.6"},
-     {:poison, "~> 1.5 or ~> 2.0"},
+     {:poison, ">= 1.5.0"},
 
      {:meck, "~> 0.8.3", only: :test}]
   end
